@@ -18,6 +18,9 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     
+    # Skip everything unless this is actually a v* tag
+    if: startsWith(github.ref, 'refs/tags/v')
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -179,21 +182,4 @@ jobs:
           echo "| GitHub Head Ref | ${{ github.head_ref }} |"
           echo "| GitHub Base Ref | ${{ github.base_ref }} |"
 
-  # Example job that uses the branch name
-  example-usage:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    needs: detect-branch
-    if: always()
-    
-    steps:
-      - name: Example usage of branch detection
-        shell: bash
-        run: |
-          echo "In a dependent job, you would access the branch name like this:"
-          echo "Operating System: ${{ matrix.os }}"
-          echo "Runner OS: $RUNNER_OS"
-          echo "Branch: ${{ needs.detect-branch.outputs.branch_name }}"
-          echo "Method: ${{ needs.detect-branch.outputs.detection_method }}"
+ 
